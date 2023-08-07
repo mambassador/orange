@@ -92,11 +92,11 @@
                <li {% if request.path == posts_url %}class="active"{% endif %}>
                  <a href="{{ posts_url }}">Browse</a>
                </li>
-
+                {% if user.is_authenticated %}
                <li {% if request.path == my_posts_url %}class="active"{% endif %}>
                  <a href="{{ my_posts_url }}">My posts</a>
                </li>
-
+                {% endif %}
             <li {% if request.path == create_url %}class="active"{% endif %}>
                  <a href="{{ create_url }}">Create Post</a>
                </li>
