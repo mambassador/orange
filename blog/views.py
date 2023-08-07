@@ -26,7 +26,7 @@ class LoginUser(LoginView):
 
 class UserCreateView(SuccessMessageMixin, generic.CreateView):
     template_name = "registration/register.html"
-    success_url = reverse_lazy("index")
+    success_url = reverse_lazy("index_redirect")
     form_class = UserSignUpForm
     success_message = "Your profile was created successfully"
 
