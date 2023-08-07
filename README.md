@@ -25,7 +25,7 @@ This repository contains a simple Django blog project created for educational pu
 ✅The user is notified about a new comment under the post with a link to the post (console) 
 ✅Optimization of requests to the database
 ✅Fixtures loremipsum
-# Watches
+
 
 ### Setting up the project
 - First you need to create virtual environment and install all dependencies:
