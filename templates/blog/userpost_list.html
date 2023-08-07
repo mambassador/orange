@@ -35,7 +35,9 @@
                   </h2>
                   <p>{{ post.description }}</p>
                   <p>
+                      {% if post.author.pk == request.user.pk %}
                     <a href="{% url "blog:update" pk=post.pk %}">Update Post</a>
+                      {% endif %}
                   </p>
                 </div>
               </div>
