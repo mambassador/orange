@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+<head>
+    {% block title %}<title>Browse Posts</title>{% endblock %}
+</head>
+<body>
+
+{% block content %}
+
+ <div class="section-latest">
+      <div class="container">
+        <div class="row gutter-v1 align-items-stretch mb-5">
+          <div class="col-12">
+            <h2 class="section-title">Browse posts</h2>
+          </div>
+          <div class="col-md-9 pr-md-5">
+            <div class="row">
+
+
+              {% for post in post_list %}
+              <div class="col-12">
+                <div class="post-entry horizontal d-md-flex">
+                  <div class="media">
+                    <a href="#"><img src="{% if post.photo %}{{ post.photo.url }}{% else %}{% static "blog/images/post_list_post_default.png" %} {% endif %}" alt="Image" class="img-fluid"></a>
+                  </div>
+                  <div class="text">
+                    <div class="meta">
+                      <span>{{ post.pub_date }}</span>
+                      <span>&bullet;</span>
+                      <span><a href="{% url "blog:user_detail" pk=post.author.pk %}">{{ post.author.username }}</a></span>
+                    </div>
+                    <h2><a href="{% url "blog:post" pk=post.pk %}">{{ post.title }}</a></h2>
+                    <p>{{ post.description }}</p>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+      </div>
+    </div>
+
+<!-- Add pagination links -->
+
+<div class="pagination">
+  <span class="step-links">
+    {% if is_paginated %}
+      {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo; first</a>
+        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+      {% endif %}
+
+      <span class="current">
+        Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+      </span>
+
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">next</a>
+        <a href="?page={{ paginator.num_pages }}">last &raquo;</a>
+      {% endif %}
+    {% endif %}
+  </span>
+</div>
+{% endblock %}
+</div>
+</body>

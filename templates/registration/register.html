@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+        <link rel="stylesheet" href="{% static 'blog/registration/css/styles.css' %}" media="screen" type="text/css" />
+        <meta charset="utf-8">
+        <title>Login</title>
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,700">
+
+</head>
+<body>
+    <div class="container">
+        <div id="login">
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-error">{{ form.non_fields_errors }}</div>
+                <fieldset class="clearfix">
+
+                    <p><span class="fontawesome-user"></span>
+                    <input type="text" name="username" id="usernameInput" placeholder="Username" required></p>
+                    </p>
+                    <p><span class="fontawesome-envelope"></span>
+                    <input type="text" name="email" id="emailInput" placeholder="Email" required></p>
+                    </p>
+                    <p><span class="fontawesome-edit"></span>
+                    <input type="text" name="first_name" id="firstNameInput" placeholder="First name" required></p>
+                    </p>
+                    <p><span class="fontawesome-edit"></span>
+                    <input type="text" name="last_name" id="lastNameInput" placeholder="Last name" required></p>
+                    </p>
+                    <p><span class="fontawesome-lock"></span>
+                    <input type="password" name="password1" id="password1Input" placeholder="Password"  required></p>
+                    </p>
+                    <p><span class="fontawesome-lock"></span>
+                    <input type="password" name="password2" id="password2Input" placeholder="Confirm password"  required></p>
+                    </p>
+                    <p><input type="submit" value="Sign Up"></p>
+                </fieldset>
+            </form>
+
+            <p>Already a member? <a href="{% url "login" %}">Login now</a><span class="fontawesome-arrow-right"></span></p>
+        </div> <!-- end login -->
+    </div>
+    <script src="{% static 'blog/registration/js/register_placeholder.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="Untree.co">
+  <link rel="shortcut icon" href="{% static "blog/images/favicon.png" %}">
+
+  <meta name="description" content="" />
+  <meta name="keywords" content="bootstrap, bootstrap4" />
+
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700,900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'blog/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'blog/css/owl.carousel.min.css' %}">
+  <link rel="stylesheet" href="{% static 'blog/css/owl.theme.default.min.css' %}">
+  <link rel="stylesheet" href="{% static 'blog/fonts/icomoon/style.css' %}">
+  <link rel="stylesheet" href="{% static 'blog/fonts/flaticon/font/flaticon.css' %}">
+  <link rel="stylesheet" href="{% static 'blog/css/jquery.fancybox.min.css' %}">
+  <link rel="stylesheet" href="{% static 'blog/css/aos.css' %}">
+  <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+
+  {% block title %}<title>Story Free HTML Template by Untree.co</title>{% endblock %}
+</head>
+<body>
+
+{% block header_content %}
+  <div class="site-mobile-menu site-navbar-target">
+    <div class="site-mobile-menu-header">
+      <div class="site-mobile-menu-close">
+        <span class="icofont-close js-menu-toggle"></span>
+      </div>
+    </div>
+    <div class="site-mobile-menu-body"></div>
+  </div>
+
+
+  <div class="site-mobile-menu site-navbar-target">
+      <div class="site-mobile-menu-header">
+        <div class="site-mobile-menu-close">
+          <span class="icofont-close js-menu-toggle"></span>
+        </div>
+      </div>
+      <div class="site-mobile-menu-body"></div>
+    </div>
+
+    <div class="container">
+
+      <nav class="site-nav">
+        <div class="row justify-content-between align-items-center">
+          <div class="d-none d-lg-block col-lg-3 top-menu"></div>
+          <div class="col-3 col-md-6 col-lg-6 text-lg-center logo">
+            <a href="{% url "index_redirect" %}">orange<span class="text-primary">.</span> </a>
+          </div>
+          <div class="col-9 col-md-6 col-lg-3 text-right top-menu">
+            <div class="d-inline-flex align-items-center">
+
+              {% if user.is_authenticated %}
+              <div class="search-wrap">
+                <a href="{% url 'logout' %}" class="d-inline-flex align-items-center js-search-toggle">
+                    <span>Log out</span>
+                </a>
+              </div>
+              {% else %}
+                 <div class="search-wrap">
+                <a href="{% url 'login' %}" class="d-inline-flex align-items-center js-search-toggle">
+                  <span>Login</span>
+                </a>
+              </div>
+              {% endif %}
+
+              <span class="mx-2 d-inline-block d-lg-none"></span>
+
+              <a href="#" class="burger ml-3 site-menu-toggle js-menu-toggle d-inline-block d-lg-none" data-toggle="collapse" data-target="#main-navbar">
+                <span></span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="d-none d-lg-block row align-items-center py-3">
+
+          <div class="col-12 col-sm-12 col-lg-12 site-navigation text-center">
+            <ul class="js-clone-nav d-none d-lg-inline-block text-left site-menu">
+              {% url "blog:posts" as posts_url %}
+              {% url "blog:my_posts" pk=request.user.pk as my_posts_url  %}
+              {% url 'blog:user_detail' pk=request.user.pk as user_detail_url %}
+              {% url 'blog:create' as create_url %}
+              {% url 'blog:contact' as contact_url %}
+
+               <li {% if request.path == posts_url %}class="active"{% endif %}>
+                 <a href="{{ posts_url }}">Browse</a>
+               </li>
+
+               <li {% if request.path == my_posts_url %}class="active"{% endif %}>
+                 <a href="{{ my_posts_url }}">My posts</a>
+               </li>
+
+            <li {% if request.path == create_url %}class="active"{% endif %}>
+                 <a href="{{ create_url }}">Create Post</a>
+               </li>
+                {% if user.is_authenticated %}
+               <li {% if request.path == user_detail_url %}class="active"{% endif %}>
+                 <a href="{{ user_detail_url }}">Profile</a>
+               </li>
+                {% endif %}
+            <li {% if request.path == contact_url %}class="active"{% endif %}>
+                 <a href="{% url "blog:contact" %}">Contact Admin</a>
+               </li>
+            </ul>
+          </div>
+        </div>
+      </nav> <!-- END nav -->
+    </div> <!-- END container -->
+
+{% endblock %}
+{% if messages %}
+  <div class="success-message">
+    {% for message in messages %}
+      <div class="alert alert-success" role="alert">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+{% block content %}{% endblock %}
+
+    <div class="site-footer">
+      <div class="container">
+        <div class="row justify-content-center copyright">
+
+          <div class="col-lg-7 text-center">
+
+            <div class="widget">
+              <ul class="social list-unstyled">
+                <li><a href="#"><span class="icon-facebook"></span></a></li>
+                <li><a href="#"><span class="icon-twitter"></span></a></li>
+                <li><a href="#"><span class="icon-linkedin"></span></a></li>
+                <li><a href="#"><span class="icon-youtube-play"></span></a></li>
+              </ul>
+            </div>
+
+            <div class="widget">
+                <p>Copyright &copy;<script>document.write(new Date().getFullYear());</script>. All Rights Reserved. &mdash; Designed with love by <a href="https://untree.co">Untree.co</a> <!-- License information: https://untree.co/license/ -->
+                </p>
+                <p>
+                    Backend by Tkach Vladyslav
+                </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="overlayer"></div>
+    <div class="loader">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
+{% block script %}
+    <script src="{% static "blog/js/jquery-3.4.1.min.js" %}"></script>
+    <script src="{% static "blog/js/popper.min.js" %}"></script>
+    <script src="{% static "blog/js/bootstrap.min.js" %}"></script>
+    <script src="{% static "blog/js/owl.carousel.min.js" %}"></script>
+    <script src="{% static "blog/js/aos.js" %}"></script>
+    <script src="{% static "blog/js/imagesloaded.pkgd.js" %}"></script>
+    <script src="{% static "blog/js/isotope.pkgd.min.js" %}"></script>
+    <script src="{% static "blog/js/jquery.animateNumber.min.js" %}"></script>
+    <script src="{% static "blog/js/jquery.waypoints.min.js" %}"></script>
+    <script src="{% static "blog/js/jquery.fancybox.min.js" %}"></script>
+    <script src="{% static "blog/js/custom.js" %}"></script>
+{% endblock %}
+</body>
+</html>
