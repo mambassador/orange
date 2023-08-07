@@ -141,7 +141,5 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 NOREPLY_EMAIL = "noreply@orange.io"
 
 INTERNAL_IPS = [
-    # ...
     "127.0.0.1",
-    # ...
 ]
