@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+{% block content %}
+<div class="huge-article d-md-flex">
+          <div class="img-wrap">
+            <a href="#"><img src="{% if user.photo %}{{ user.photo.url }}{% else %}{% static 'blog/images/user_default.png' %}{% endif %}" alt="Image" class="img-fluid"></a>
+          </div>
+          <div class="text-wrap">
+            <div class="meta">
+                {% if user.is_authenticated and user == request.user %}
+              <span><a href="{% url "blog:user_update" %}">Edit profile</a></span>
+                {% endif %}
+            </div>
+            <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+            <p>{{ user.description }}</p>
+            <div class="author d-flex align-items-center">
+              <div class="text">
+                <h3><a href="{% url "blog:my_posts" pk=user.pk %}">User posts</a></h3>
+{#                <strong>User for {% if years_on_site > 0 %}{{ years_on_site }} years and {% endif %}{{ days_on_site }} days</strong>#}
+              </div>
+            </div>
+          </div>
+        </div>
+{% endblock %}
+</body>
+</html>
