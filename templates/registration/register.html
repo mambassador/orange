@@ -17,7 +17,7 @@
                 {% csrf_token %}
                 <div class="form-error">{{ form.non_fields_errors }}</div>
                 <fieldset class="clearfix">
-
+                    {{ form.errors }}
                     <p><span class="fontawesome-user"></span>
                     <input type="text" name="username" id="usernameInput" placeholder="Username" required></p>
                     </p>
