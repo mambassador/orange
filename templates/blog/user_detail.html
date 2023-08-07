@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load cache %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -13,7 +14,7 @@
 {% block content %}
 <div class="huge-article d-md-flex">
           <div class="img-wrap">
-            <a href="#"><img src="{% if user.photo %}{{ user.photo.url }}{% else %}{% static 'blog/images/user_default.png' %}{% endif %}" alt="Image" class="img-fluid"></a>
+            <a href="#"><img src="{% if user.photo %}{% cache 500 photo %}{{ user.photo.url }}{% endcache %}{% else %}{% static 'blog/images/user_default.png' %}{% endif %}" alt="Image" class="img-fluid"></a>
           </div>
           <div class="text-wrap">
             <div class="meta">
@@ -26,7 +27,6 @@
             <div class="author d-flex align-items-center">
               <div class="text">
                 <h3><a href="{% url "blog:my_posts" pk=user.pk %}">User posts</a></h3>
-{#                <strong>User for {% if years_on_site > 0 %}{{ years_on_site }} years and {% endif %}{{ days_on_site }} days</strong>#}
               </div>
             </div>
           </div>

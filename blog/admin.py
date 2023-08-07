@@ -1,7 +1,8 @@
 from django.contrib import admin
 from .models import User, Post, Comment
-from django.core.mail import send_mail
 from django.urls import reverse
+from .tasks import new_comment_mail_to_user
+from django.utils import timezone
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -36,7 +37,7 @@ class CommentAdmin(admin.ModelAdmin):
     search_fields = ("author", "post__title", "text")
     date_hierarchy = "pub_date"
     ordering = ("-pub_date",)
-    list_filter = (IsPublishedFilter,)  # Add the custom filter here
+    list_filter = (IsPublishedFilter,)
 
     def mark_published(self, request, queryset):
         queryset.update(is_published=True)
@@ -46,12 +47,13 @@ class CommentAdmin(admin.ModelAdmin):
             post_link = request.build_absolute_uri(reverse("blog:post", args=[comment.post.pk]))
             message = f"Your post has a new comment!\n\nView the comment: {post_link}"
 
-            send_mail(
-                "New Comment on Your Post",
-                message,
-                "admin@orange.com",
-                [post_author_email],
-                fail_silently=False,
+            new_comment_mail_to_user.apply_async(
+                kwargs={
+                    "to_email": [post_author_email],
+                    "message": message,
+                    "subject": "New Comment on Your Post",
+                },
+                eta=timezone.now(),
             )
 
     mark_published.short_description = "Mark selected comments as Published"
@@ -80,10 +82,18 @@ class PostAdmin(admin.ModelAdmin):
     ordering = ("-pub_date",)
     inlines = [CommentInline]
 
-    def mark_approved(self, request, queryset):
+    def mark_approved(
+        self,
+        queryset,
+        request,
+    ):
         queryset.update(is_approved=True)
 
-    def mark_not_approved(self, request, queryset):
+    def mark_not_approved(
+        self,
+        queryset,
+        request,
+    ):
         queryset.update(is_approved=False)
 
     mark_approved.short_description = "Mark selected posts as Approved"

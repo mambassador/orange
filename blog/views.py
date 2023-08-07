@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.views import LoginView
 from django.urls import reverse, reverse_lazy
+
+from core import settings
 from .forms import UserSignUpForm, UserUpdateForm, PostForm, CommentForm, ContactForm
 from blog.forms import LoginUserForm
 from django.contrib.messages.views import SuccessMessageMixin
@@ -12,7 +14,7 @@ from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.views.generic.edit import FormView
-from django.core.mail import send_mail
+from .tasks import new_comment_mail_to_admin, new_post_mail_to_admin, new_contact_request_to_admin
 
 
 def index(request):
@@ -90,14 +92,16 @@ class PostCreateView(LoginRequiredMixin, generic.CreateView):
         form.instance.author = self.request.user
         form.instance.photo = self.request.FILES.get("photo")
 
-        send_mail(
-            "Contact Form Submission",
-            f"{form.instance.author.username} has published new post"
-            f"Check admin panel to approve or decline publication",
-            "admin@orange.com",
-            [form.instance.author.email],
-            fail_silently=False,
+        new_post_mail_to_admin.apply_async(
+            kwargs={
+                "to_email": [settings.ADMIN_EMAIL],
+                "message": f"{form.instance.author.username} has published new post"
+                f"Check admin panel to approve or decline publication",
+                "subject": "New post to approve",
+            },
+            eta=timezone.now(),
         )
+
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -182,12 +186,14 @@ class PostDetailView(generic.DetailView):
             comment.post = post
             comment.save()
 
-            send_mail(
-                "Created new Comment",
-                f"{request.user} has published new post" f"Check admin panel to approve or decline publication",
-                "admin@orange.com",
-                ["service@orange.com"],
-                fail_silently=False,
+            new_comment_mail_to_admin.apply_async(
+                kwargs={
+                    "to_email": [settings.ADMIN_EMAIL],
+                    "message": f"{form.instance.author.username} has published new comment"
+                    f"Check admin panel to approve or decline publication",
+                    "subject": "New comment to approve",
+                },
+                eta=timezone.now(),
             )
 
             return redirect("blog:post", pk=post.pk)
@@ -211,12 +217,14 @@ class ContactView(SuccessMessageMixin, FormView):
         email = form.cleaned_data["email"]
         message = form.cleaned_data["message"]
 
-        send_mail(
-            "Contact Form Submission",
-            f"Name: {first_name}\nEmail: {email}\nMessage: {message}",
-            "admin@orange.com",
-            [email],
-            fail_silently=False,
+        new_contact_request_to_admin.apply_async(
+            kwargs={
+                "from_email": email,
+                "to_email": [settings.ADMIN_EMAIL],
+                "message": f"Name: {first_name}\nEmail: {email}\nMessage: {message}",
+                "subject": "New contact request from user",
+            },
+            eta=timezone.now(),
         )
         form.save()
         return super().form_valid(form)

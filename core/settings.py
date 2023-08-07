@@ -25,8 +25,6 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -38,6 +36,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "blog",
+    "django_extensions",
+    "django_celery_results",
     "debug_toolbar",
 ]
 
@@ -139,9 +139,25 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 NOREPLY_EMAIL = "noreply@orange.io"
+ADMIN_EMAIL = "admin@orange.com"
 
-INTERNAL_IPS = [
-    # ...
-    "127.0.0.1",
-    # ...
-]
+
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL")
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_ENABLE_UTC = False
+
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+    }
+}
+
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+INTERNAL_IPS = ["127.0.0.1", "localhost"]

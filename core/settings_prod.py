@@ -48,7 +48,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -139,8 +138,15 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 NOREPLY_EMAIL = "noreply@orange.io"
 
-INTERNAL_IPS = [
-    # ...
-    "127.0.0.1",
-    # ...
-]
+INTERNAL_IPS = ["127.0.0.1", "localhost"]
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CELERY_BROKER_URL = "redis://your_redis_host:6379/0"
+CELERY_RESULT_BACKEND = "redis://your_redis_host:6379/1"
+
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_ENABLE_UTC = False
