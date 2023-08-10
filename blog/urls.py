@@ -13,4 +13,5 @@ urlpatterns = [
     path("create/", views.PostCreateView.as_view(), name="create"),
     path("update/<int:pk>", views.PostUpdateView.as_view(), name="update"),
     path("contact/", ContactView.as_view(), name="contact"),
+    path("contact_ajax/", views.contact_ajax, name="contact_ajax"),
 ]

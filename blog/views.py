@@ -13,6 +13,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.views.generic.edit import FormView
 from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.template.loader import render_to_string
+
+from .tasks import send_contact_email
 
 
 def index(request):
@@ -220,3 +224,34 @@ class ContactView(SuccessMessageMixin, FormView):
         )
         form.save()
         return super().form_valid(form)
+
+
+def save_contact_form(request, form, template_name):
+    data = dict()
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+
+            first_name = form.cleaned_data["first_name"]
+            last_name = form.cleaned_data["last_name"]
+            email = form.cleaned_data["email"]
+            message = form.cleaned_data["message"]
+
+            send_contact_email.delay(first_name, last_name, email, message)
+
+            data["form_is_valid"] = True
+            data["message"] = "Your contact submitted successfully"
+        else:
+            data["form_is_valid"] = False
+
+    context = {"form": form}
+    data["html_form"] = render_to_string(template_name, context, request=request)
+    return JsonResponse(data)
+
+
+def contact_ajax(request):
+    if request.method == "POST":
+        form = ContactForm(request.POST)
+    else:
+        form = ContactForm
+    return save_contact_form(request, form, "blog/contact_ajax.html")

@@ -106,7 +106,7 @@
                </li>
                 {% endif %}
             <li {% if request.path == contact_url %}class="active"{% endif %}>
-                 <a href="{% url "blog:contact" %}">Contact Admin</a>
+                 <a href="#" class="js-create-contact" data-toggle="modal" data-url="{% url 'blog:contact_ajax' %}" data-target="contactModal">Contact Admin</a>
                </li>
             </ul>
           </div>
@@ -160,6 +160,16 @@
       </div>
     </div>
 
+
+<div class="modal fade" id="modal-contact">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+      </div>
+    </div>
+</div>
+
+
 {% block script %}
     <script src="{% static "blog/js/jquery-3.4.1.min.js" %}"></script>
     <script src="{% static "blog/js/popper.min.js" %}"></script>
@@ -172,6 +182,8 @@
     <script src="{% static "blog/js/jquery.waypoints.min.js" %}"></script>
     <script src="{% static "blog/js/jquery.fancybox.min.js" %}"></script>
     <script src="{% static "blog/js/custom.js" %}"></script>
+    <script src="{% static "blog/js/my_ajax.js" %}"></script>
+    <script src="{% static "blog/js/ajax.js" %}"></script>
 {% endblock %}
 </body>
 </html>

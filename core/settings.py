@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_extensions",
+    "django_celery_results",
+    "widget_tweaks",
     "blog",
     "debug_toolbar",
 ]
@@ -138,9 +140,25 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+    }
+}
+
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 NOREPLY_EMAIL = "noreply@orange.io"
 
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_BROKER_URL = "amqp://admin:admin@localhost:5672"
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_TIMEZONE = "Europe/Kiev"
+CELERY_ENABLE_UTC = False
