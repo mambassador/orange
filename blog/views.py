@@ -237,8 +237,10 @@ def save_contact_form(request, form, template_name):
             email = form.cleaned_data["email"]
             message = form.cleaned_data["message"]
 
-            send_contact_email.delay(first_name, last_name, email, message)
-
+            send_contact_email.apply_async(
+                kwargs={"first_name": first_name, "last_name": last_name, "email": email, "message": message},
+                eta=timezone.now(),
+            )
             data["form_is_valid"] = True
             data["message"] = "Your contact submitted successfully"
         else:
