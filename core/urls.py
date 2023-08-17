@@ -26,6 +26,7 @@ from django.views.generic import RedirectView
 
 urlpatterns = [
     path("", RedirectView.as_view(pattern_name="blog:posts"), name="index_redirect"),
+    path('api/', include('api.urls')),
     path("admin/", admin.site.urls),
     path("logout/", LogoutView.as_view(), name="logout"),
     path("register/", UserCreateView.as_view(), name="register"),
